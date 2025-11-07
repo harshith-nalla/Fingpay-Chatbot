@@ -3,6 +3,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pathlib import Path
+
+import uvicorn
 from models.request_models import ChatRequest, EndRequest
 from models.response_models import ChatResponse, EndResponse
 from core.orchestrator import process_user_query
@@ -33,3 +35,7 @@ def chat(req: ChatRequest):
 def end(req: EndRequest):
     result = process_user_query("end", session_id=req.session_id)
     return EndResponse(**result)
+
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", 8080))   # ✅ use GCP’s environment variable
+    uvicorn.run(app, host="127.0.0.1", port=port)
